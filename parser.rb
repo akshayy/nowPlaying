@@ -8,6 +8,11 @@ COMMON_URL="http://www.google.com"
 URL="http://www.google.com/movies?near=pune&sort=1&start="
 MOVIES_URL = "http://www.google.com/movies?near="
 
+not_found do
+  error_hash = {:error => "No such method found.Please refer documentation"}
+  return error_hash.to_hash
+end
+
 get '/movies?' do
  error_hash = {}
  start = params[:start]
@@ -53,6 +58,10 @@ get '/movies?' do
  movies_hash={:movies => []}
 
  movies = doc.css(".movie")  
+ if movies.size == 0 
+   error_hash = {:error => "Data not available for specified location"}
+   return error_hash.to_json
+ end
  movies.each do |movie|
    movie_hash = {
      :movie_name =>"",
